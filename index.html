@@ -60,7 +60,8 @@
                 <label for="Description" class="col-sm-2 col-form-label">Description</label>
                 <textarea type="text" class="form-control" id="Description" rows="2"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary my-3" id="tap">Add Your List</button>
+            <button class="btn btn-primary my-3" id="tap">Add Your List</button>
+            <button id="clear" class="btn btn-primary my-3" onclick="clearstr()">clear List</button>
 
     </div>
     <div class=" text-center my-4" id="items"><b>Your items</b>
@@ -102,8 +103,7 @@
 
 </body>
 <script>
-    tap = document.getElementById("tap");
-    tap.addEventListener("click", () => {
+    function update() {
         console.log("list updating...");
         title = document.getElementById("title").value;
         desc = document.getElementById("Description").value;
@@ -125,17 +125,37 @@
         itemJsonArray.forEach((element, index) => {
             str += `
                 <tr>
-                <th scope="row">${index+1}</th>
+                <th scope="row">${index}</th>
                 <td>${element[0]}</td>
                 <td>${element[1]}</td>
-                <td><button class="btn btn-primary">delet</button></td>
-                </tr>;
-                `
-            tablebody.innerHTML = str
-        })
+                <td><button class="btn btn-primary" onclick="deleted(${index})">delete</button></td>
+                </tr>`;
 
 
-    })
+        });
+        tablebody.innerHTML = str;
+    }
+    tap = document.getElementById("tap");
+    tap.addEventListener("click", update);
+    update();
+
+    function deleted(itemindex) {
+        console.log("deleted", itemindex);
+        itemJsonArrayStr = localStorage.getItem("itemsjson")
+        itemJsonArray = JSON.parse(itemJsonArrayStr);
+        //delete item of the array
+        itemJsonArray.splice(itemindex, 1);
+        localStorage.setItem("itemsjson", JSON.stringify(itemJsonArray));
+        update();
+
+    }
+
+    function clearstr() {
+        console.log("clearing all");
+        localStorage.clear();
+        update();
+
+    }
 </script>
 
 </html>
