@@ -51,14 +51,14 @@
         <h2 class="text-center">To-Do List</h2>
         <form>
             <div class="form-group">
-                <label for="title" class="col-form-label" id="title">Title</label>
+                <label for="title" class="col-form-label">Title</label>
                 <div class="col">
                     <input type="text" class="form-control" id="title">
                 </div>
             </div>
             <div class="form-group mb-3">
                 <label for="Description" class="col-sm-2 col-form-label">Description</label>
-                <textarea type="text" class="form-control" id="desc" rows="2"></textarea>
+                <textarea type="text" class="form-control" id="Description" rows="2"></textarea>
             </div>
             <button type="submit" class="btn btn-primary my-3" id="tap">Add Your List</button>
 
@@ -73,25 +73,15 @@
                     <th scope="col">actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tablebody">
                 <tr>
                     <th scope="row">1</th>
-                    <td>Js interview</td>
-                    <td>Tommorow is the date</td>
+                    <td></td>
+                    <td></td>
                     <td><button class="btn btn-primary">delet</button></td>
+                </tr>
 
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+
             </tbody>
         </table>
 
@@ -116,12 +106,33 @@
     tap.addEventListener("click", () => {
         console.log("list updating...");
         title = document.getElementById("title").value;
-        desc = document.getElementById("desc").value;
-        if (localStorage.getItem("items") == null) {
+        desc = document.getElementById("Description").value;
+        if (localStorage.getItem("itemsjson") == null) {
             itemJsonArray = [];
-            itemJsonArray.push([title.desc]);
-            localStorage.setItem("items", JSON.stringify(itemJsonArray))
+            itemJsonArray.push([title, desc]);
+            localStorage.setItem("itemsjson", JSON.stringify(itemJsonArray));
+        } else {
+            itemJsonArrayStr = localStorage.getItem("itemsjson")
+            itemJsonArray = JSON.parse(itemJsonArrayStr);
+            itemJsonArray.push([title, desc]);
+            localStorage.setItem("itemsjson", JSON.stringify(itemJsonArray));
+
         }
+
+        // populate the tablebody
+        let tablebody = document.getElementById("tablebody");
+        let str = "";
+        itemJsonArray.forEach((element, index) => {
+            str += `
+                <tr>
+                <th scope="row">${index+1}</th>
+                <td>${element[0]}</td>
+                <td>${element[1]}</td>
+                <td><button class="btn btn-primary">delet</button></td>
+                </tr>;
+                `
+            tablebody.innerHTML = str
+        })
 
 
     })
